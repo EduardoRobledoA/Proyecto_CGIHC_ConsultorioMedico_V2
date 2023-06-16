@@ -239,7 +239,7 @@ bool Start() {
 	//Órganos:
 	floorObject = new Model("models/floor.fbx");
 	//Pancreas = new Model("models/Pancreas.fbx");
-	DigestiveSystem = new Model("models/DigestiveSystem.fbx");
+	DigestiveSystem = new Model("models/DigestiveSystem2.fbx");
 	Glass = new Model("models/Glass.fbx");
 	MetalBase = new Model("models/MetalBase.fbx");
 	Red = new Model("models/Red.fbx");
@@ -289,7 +289,7 @@ bool Start() {
 	light01.Position = glm::vec3(7.0f, 17.5f, 1.5f);
 	light01.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f); // color de las luces. Al estar en la misma medida, son blancas
 	light01.Direction = glm::vec3(1.0f, 1.0f, 1.0f); // Dirección (no aplica para fuentes puntuales)
-	//gLights.push_back(light01);
+	gLights.push_back(light01);
 
 	Light light02;
 	light02.Position = glm::vec3(8.1f, 15.4f, -2.1f);
@@ -306,7 +306,7 @@ bool Start() {
 	Light light04;
 	light04.Position = glm::vec3(-5.0f, 2.0f, -5.0f);
 	light04.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
-	//gLights.push_back(light04);
+	gLights.push_back(light04);
 
 	//------------------------------------------------- Editando instancias de propiedades del material--------------------------------
 	// Acabado metálico
