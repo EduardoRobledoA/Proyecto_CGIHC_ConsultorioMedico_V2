@@ -89,7 +89,6 @@ Shader *staticShader;
 Shader *fresnelShader;
 Shader *puertaShader;
 Shader *metalPhongShader;
-Shader *cartelesShader;
 
 // Carga la información del modelo (poner referencias de los modelos a utilizar)
 Model	*doctorCaminando;
@@ -109,7 +108,6 @@ Model	*MetalCube;
 Model	*Blood;
 Model	*Sugar;
 Model	*InsulinKey;
-Model   *Carteles;
 
 
 // Variables globales (que van a variar durante la ejecución del ciclo de renderizado)
@@ -219,7 +217,6 @@ bool Start() {
 	puertaShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	metalPhongShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	wavesShader = new Shader("shaders/13_wavesAnimation.vs", "shaders/13_wavesAnimation.fs");
-	cartelesShader = new Shader("shaders/10_vertex_simple.vs", "shaders/10_fragment_simple.fs");
 
 	// Máximo número de huesos: 100
 	doctorCaminandoShader->setBonesIDs(MAX_RIGGING_BONES);
@@ -238,7 +235,6 @@ bool Start() {
 
 	doctorCaminando = new Model("models/doctorColor.fbx"); // Cargar modelo del personaje
 	doctorParado = new Model("models/doctorColorParadoEscalado.fbx"); // Cargar modelo del personaje
-	Carteles = new Model("models/CartelEntrada.fbx"); // Cargar modelo del personaje
 	
 	//Órganos:
 	floorObject = new Model("models/floor.fbx");
@@ -425,7 +421,6 @@ bool Update() {
 		mLightsShader->use();
 		//metalPhongShader->use();
 		puertaShader->use(); // Shader de puerta
-		cartelesShader->use();
 
 		// Activamos para objetos transparentes
 		glEnable(GL_BLEND);
@@ -447,8 +442,6 @@ bool Update() {
 		mLightsShader->setMat4("view", view);
 		puertaShader->setMat4("projection", projection);
 		puertaShader->setMat4("view", view);
-		cartelesShader->setMat4("projection", projection);
-		cartelesShader->setMat4("view", view);
 		//metalPhongShader->setMat4("projection", projection);
 		//metalPhongShader->setMat4("view", view);
 
@@ -460,9 +453,6 @@ bool Update() {
 
 		mLightsShader->setMat4("model", model);
 		puertaShader->setMat4("model", model);
-		cartelesShader->setMat4("model", model);
-
-		Carteles->Draw(*cartelesShader); // Dibujando Carteles
 
 		//model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));	// it's a bit too big for our scene, so scale it down
 		//metalPhongShader->setMat4("model", model);
