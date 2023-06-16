@@ -108,6 +108,7 @@ Model	*MetalCube;
 Model	*Blood;
 Model	*Sugar;
 Model	*InsulinKey;
+Model	*CartelEntrada;
 
 
 // Variables globales (que van a variar durante la ejecución del ciclo de renderizado)
@@ -149,7 +150,7 @@ float wavesTime = 0.0f;
 
 // Audio (se pueden agregar para que se ejecuten cuando se abra una puerta por ejemplo)
 ISoundEngine *SoundEngine = createIrrKlangDevice();//Creación del motor de sonido---------------------------------------------------------------------------------------------
-irrklang::ISoundSource *voz = SoundEngine->addSoundSourceFromFile("sound/Dialogo.mp3"); // revisar línea 245 para más info
+irrklang::ISoundSource *voz = SoundEngine->addSoundSourceFromFile("sound/Dialogo2.mp3"); // revisar línea 245 para más info
 irrklang::ISound *vozSonando;
 
 // selección de cámara
@@ -232,6 +233,7 @@ bool Start() {
 	hospital = new Model("models/FachadaConsultorioTest6.fbx"); // Cargar aquí el modelo del consultorio
 	puerta = new Model("models/Puerta.fbx"); //Modelo de la puerta
 	escritorio = new Model("models/Escritorio.fbx");
+	CartelEntrada = new Model("models/CartelEntrada.fbx");
 
 	doctorCaminando = new Model("models/doctorColor.fbx"); // Cargar modelo del personaje
 	doctorParado = new Model("models/doctorColorParadoEscalado.fbx"); // Cargar modelo del personaje
@@ -239,7 +241,7 @@ bool Start() {
 	//Órganos:
 	floorObject = new Model("models/floor.fbx");
 	//Pancreas = new Model("models/Pancreas.fbx");
-	DigestiveSystem = new Model("models/DigestiveSystem2.fbx");
+	DigestiveSystem = new Model("models/DigestiveSystem.fbx");
 	Glass = new Model("models/Glass.fbx");
 	MetalBase = new Model("models/MetalBase.fbx");
 	Red = new Model("models/Red.fbx");
@@ -638,6 +640,14 @@ bool Update() {
 		staticShader->setMat4("model", model);
 
 		InsulinKey->Draw(*staticShader);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		staticShader->setMat4("model", model);
+
+		CartelEntrada->Draw(*staticShader);
 
 	}
 
