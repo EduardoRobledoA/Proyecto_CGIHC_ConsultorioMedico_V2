@@ -95,6 +95,7 @@ Model	*doctorCaminando;
 Model	*doctorParado;
 Model	*hospital;
 Model   *puerta;
+Model	*puertaCristal;
 Model   *escritorio;
 Model   *floorObject;
 //Model	*Pancreas;
@@ -232,6 +233,7 @@ bool Start() {
 	// consultorio = new Model("models/ProyectoFinal/<nombre_del_archivo>.fbx")
 	hospital = new Model("models/FachadaConsultorioTest6.fbx"); // Cargar aquí el modelo del consultorio
 	puerta = new Model("models/Puerta.fbx"); //Modelo de la puerta
+	puertaCristal = new Model("models/glassDoors.fbx");
 	escritorio = new Model("models/Escritorio.fbx");
 	CartelEntrada = new Model("models/CartelEntrada.fbx");
 
@@ -506,6 +508,7 @@ bool Update() {
 		mLightsShader->setFloat("transparency", material01.transparency);
 
 		hospital->Draw(*mLightsShader);
+		
 
 		// Aplicamos propiedades materiales
 		metalPhongShader->setVec4("MaterialAmbientColor", metal02.ambient);
@@ -649,6 +652,13 @@ bool Update() {
 
 		CartelEntrada->Draw(*staticShader);
 
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		staticShader->setMat4("model", model);
+
+		puertaCristal->Draw(*staticShader);
 	}
 
 	glUseProgram(0);
