@@ -291,27 +291,32 @@ bool Start() {
 
 	// --------------------------Lights configuration (se meten a un arreglo, pueden desactivarse)----------------------------
 	
-	Light light01;
-	light01.Position = glm::vec3(7.0f, 17.5f, 1.5f);
-	light01.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f); // color de las luces. Al estar en la misma medida, son blancas
+	Light light01;										// Luz1. Consultorio. 
+	light01.Position = glm::vec3(-9.0f, 16.0f, 0.0f);
+	light01.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f); // Color de las luces. Al estar en la misma medida, son blancas
+	light01.Power = glm::vec4(12.0f, 12.0f, 12.0f, 1.0f);
 	light01.Direction = glm::vec3(1.0f, 1.0f, 1.0f); // Dirección (no aplica para fuentes puntuales)
 	gLights.push_back(light01);
 
-	Light light02;
-	light02.Position = glm::vec3(8.1f, 15.4f, -2.1f);
+	Light light02;										// Luz2. Consultorio.
+	light02.Position = glm::vec3(7.0f, 16.0f, 0.0f);
 	light02.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+	light02.Power = glm::vec4(12.0f, 12.0f, 12.0f, 1.0f);
 	light02.Direction = glm::vec3(1.0f, 1.0f, 1.0f); // Dirección (no aplica para fuentes puntuales)
 	gLights.push_back(light02);
 
-	Light light03;
-	light03.Position = glm::vec3(-16.0f, 32.0f, 34.3f);
+	Light light03;										// Luz1. Sala de espera.
+	light03.Position = glm::vec3(-2.0f, 29.0f, 23.0f);
 	light03.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+	light03.Power = glm::vec4(17.0f, 17.0f, 17.0f, 1.0f);
 	light03.Direction = glm::vec3(1.0f, 1.0f, 1.0f); // Dirección (no aplica para fuentes puntuales)
 	gLights.push_back(light03);
 
-	Light light04;
-	light04.Position = glm::vec3(-5.0f, 2.0f, -5.0f);
+	Light light04;										// Luz2. Sala de espera.
+	light04.Position = glm::vec3(-32.0f, 29.0f, 39.0f);
 	light04.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+	light04.Power = glm::vec4(17.0f, 17.0f, 17.0f, 1.0f);
+	light04.Direction = glm::vec3(1.0f, 1.0f, 1.0f); // Dirección (no aplica para fuentes puntuales)
 	gLights.push_back(light04);
 
 	//------------------------------------------------- Editando instancias de propiedades del material--------------------------------

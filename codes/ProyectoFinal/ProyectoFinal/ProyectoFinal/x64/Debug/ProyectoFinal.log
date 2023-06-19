@@ -1,8 +1,11 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(503,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
   ProyectoFinal.cpp
-C:\Users\roble\Documents\GitHub\Proyecto_CGIHC_ConsultorioMedico_V2\codes\ProyectoFinal\ProyectoFinal.cpp(760,20): warning C4305: '+=': truncamiento de 'double' a 'float'
-C:\Users\roble\Documents\GitHub\Proyecto_CGIHC_ConsultorioMedico_V2\codes\ProyectoFinal\ProyectoFinal.cpp(775,20): warning C4305: '+=': truncamiento de 'double' a 'float'
-C:\Users\roble\Documents\GitHub\Proyecto_CGIHC_ConsultorioMedico_V2\codes\ProyectoFinal\ProyectoFinal.cpp(823,20): warning C4305: '+=': truncamiento de 'double' a 'float'
+C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico_V2\codes\ProyectoFinal\ProyectoFinal.cpp(765,20): warning C4305: '+=': truncamiento de 'double' a 'float'
+C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico_V2\codes\ProyectoFinal\ProyectoFinal.cpp(780,20): warning C4305: '+=': truncamiento de 'double' a 'float'
+C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico_V2\codes\ProyectoFinal\ProyectoFinal.cpp(828,20): warning C4305: '+=': truncamiento de 'double' a 'float'
+  stb_image.cpp
+  Generando código...
+  LINK : no se encontró C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico_V2\codes\ProyectoFinal\ProyectoFinal\x64\Debug\..\..\..\..\bin\ProyectoFinal.exe o no lo generó el último vínculo incremental; ejecutando vínculo completo
 glad.lib(glad.obj) : warning LNK4099: no se encontró PDB '' con 'glad.lib(glad.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
 glfw3.lib(init.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(init.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
 glfw3.lib(window.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(window.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
@@ -26,4 +29,4 @@ glfw3.lib(null_window.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.
 glfw3.lib(null_joystick.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(null_joystick.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
 glfw3.lib(osmesa_context.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(osmesa_context.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
 LINK : warning LNK4098: la biblioteca predeterminada'MSVCRT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
-  ProyectoFinal.vcxproj -> C:\Users\roble\Documents\GitHub\Proyecto_CGIHC_ConsultorioMedico_V2\codes\bin\ProyectoFinal.exe
+  ProyectoFinal.vcxproj -> C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico_V2\codes\bin\ProyectoFinal.exe
