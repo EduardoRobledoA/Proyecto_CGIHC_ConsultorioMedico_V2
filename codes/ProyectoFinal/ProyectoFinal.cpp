@@ -110,6 +110,7 @@ Model	*Blood;
 Model	*Sugar;
 Model	*InsulinKey;
 Model	*CartelEntrada;
+Model   *CartelesInfo;
 
 
 // Variables globales (que van a variar durante la ejecución del ciclo de renderizado)
@@ -236,6 +237,7 @@ bool Start() {
 	puertaCristal = new Model("models/glassDoors.fbx");
 	escritorio = new Model("models/Escritorio.fbx");
 	CartelEntrada = new Model("models/CartelEntrada.fbx");
+	CartelesInfo = new Model("models/CartelesInfo.fbx");
 
 	doctorCaminando = new Model("models/doctorColor.fbx"); // Cargar modelo del personaje
 	doctorParado = new Model("models/doctorColorParadoEscalado.fbx"); // Cargar modelo del personaje
@@ -651,6 +653,7 @@ bool Update() {
 		staticShader->setMat4("model", model);
 
 		CartelEntrada->Draw(*staticShader);
+		CartelesInfo->Draw(*staticShader);
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
