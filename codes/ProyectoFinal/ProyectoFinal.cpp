@@ -51,7 +51,7 @@ const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
 // Definición de las cámaras (posición en XYZ)
-Camera camera(glm::vec3(0.0f, 5.0f, 10.0f)); // Es nuestro punto de partida
+Camera camera(glm::vec3(-37.16f, 5.0f, -10.92f)); // Es nuestro punto de partida
 Camera camera3rd(glm::vec3(0.0f, 10.0f, 5.0f)); // Acomodar en posición del doc
 
 // Controladores para el movimiento del mouse
@@ -89,6 +89,7 @@ Shader *staticShader;
 Shader *fresnelShader;
 Shader *puertaShader;
 Shader *metalPhongShader;
+Shader *cartelTransShader;
 
 // Carga la información del modelo (poner referencias de los modelos a utilizar)
 Model	*doctorCaminando;
@@ -109,8 +110,9 @@ Model	*MetalCube;
 Model	*Blood;
 Model	*Sugar;
 Model	*InsulinKey;
-Model	*CartelEntrada;
+Model	*CartelesAccion;
 Model   *CartelesInfo;
+Model	*CartelTrans;
 
 
 // Variables globales (que van a variar durante la ejecución del ciclo de renderizado)
@@ -127,6 +129,7 @@ Sugerencia: Material <tipoDeMaterial>
 */
 Material material01;
 Material metal02;
+Material carteles03;
 
 // Creación de luces con Light gLight;
 std::vector<Light> gLights;
@@ -152,8 +155,12 @@ float wavesTime = 0.0f;
 
 // Audio (se pueden agregar para que se ejecuten cuando se abra una puerta por ejemplo)
 ISoundEngine *SoundEngine = createIrrKlangDevice();//Creación del motor de sonido---------------------------------------------------------------------------------------------
-irrklang::ISoundSource *voz = SoundEngine->addSoundSourceFromFile("sound/Dialogo2.mp3"); // revisar línea 245 para más info
-irrklang::ISound *vozSonando;
+
+ISoundSource *voz = SoundEngine->addSoundSourceFromFile("sound/Dialogo2.mp3"); //
+ISoundSource *sonidoIntroduccion = SoundEngine->addSoundSourceFromFile("sound/Introduccion.mp3"); //
+
+ISound	*vozSonando;
+ISound	*introduccionSonando;
 
 // selección de cámara
 bool    activeCamera = 1; // 1 = Cámara modo libre, 0 = Cámara vista desde el doctor
@@ -220,6 +227,7 @@ bool Start() {
 	puertaShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	metalPhongShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	wavesShader = new Shader("shaders/13_wavesAnimation.vs", "shaders/13_wavesAnimation.fs");
+	cartelTransShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 
 	// Máximo número de huesos: 100
 	doctorCaminandoShader->setBonesIDs(MAX_RIGGING_BONES);
@@ -230,14 +238,14 @@ bool Start() {
 	// 
 	// ----------------------------------------------------Importación de modelos -----------------------------------------------------------------
 	// Para organización, crear el objeto y llamarlo por lo que es. Ejemplo:
-	// 
 	// consultorio = new Model("models/ProyectoFinal/<nombre_del_archivo>.fbx")
 	hospital = new Model("models/FachadaConsultorioTest6.fbx"); // Cargar aquí el modelo del consultorio
 	puerta = new Model("models/Puerta.fbx"); //Modelo de la puerta
-	puertaCristal = new Model("models/glassDoors.fbx");
+	puertaCristal = new Model("models/glassDoors.fbx"); 
 	escritorio = new Model("models/Escritorio.fbx");
-	CartelEntrada = new Model("models/CartelEntrada.fbx");
+	CartelesAccion = new Model("models/CartelesAccion.fbx");
 	CartelesInfo = new Model("models/CartelesInfo.fbx");
+	CartelTrans = new Model("models/CartelTrans.fbx");
 
 	doctorCaminando = new Model("models/doctorColor.fbx"); // Cargar modelo del personaje
 	doctorParado = new Model("models/doctorColorParadoEscalado.fbx"); // Cargar modelo del personaje
@@ -252,13 +260,11 @@ bool Start() {
 	Vein = new Model("models/Vein.fbx");
 	CubeGlass = new Model("models/CubeGlass.fbx");
 	MetalCube = new Model("models/MetalCube.fbx");
-
 	
 	Blood = new Model("models/Blood.fbx");
 	Sugar = new Model("models/Sugar.fbx");
 	InsulinKey = new Model("models/InsulinKey.fbx");
 	
-
 	// Cubemap
 	vector<std::string> faces
 	{
@@ -288,6 +294,10 @@ bool Start() {
 	camera3rd.Position.y += 5.0f;
 	camera3rd.Position -= forwardView;
 	camera3rd.Front = forwardView;
+
+	//Inicialización de la cámara (1ra persona / free)
+	camera.Yaw = 45.0f;
+
 
 	// --------------------------Lights configuration (se meten a un arreglo, pueden desactivarse)----------------------------
 	
@@ -320,13 +330,20 @@ bool Start() {
 	gLights.push_back(light04);
 
 	//------------------------------------------------- Editando instancias de propiedades del material--------------------------------
-	// Acabado metálico
+	// Acabado metálico (silver)
 	metal02.ambient = glm::vec4(0.19225f, 0.19225f, 0.19225f, 1.0f);
 	metal02.diffuse = glm::vec4(0.50754f, 0.50754f, 0.50754f, 1.0f);
 	metal02.specular = glm::vec4(0.508273f, 0.508273f, 0.508273f, 1.0f);
 	
+	// Acabado Carteles transparentes
+	carteles03.transparency = 0.92f;
+
 	// --------------------------------------------------Efectos de sonido (sólo inicializaciones) -----------------------------------------
-	voz->setDefaultVolume(0.65f); //Estableciendo volumen
+
+	sonidoIntroduccion->setDefaultVolume(0.6f); //Estableciendo volumen
+	introduccionSonando = SoundEngine->play2D(sonidoIntroduccion, false); //preparando sonido (empieza al abrir el programa).
+
+	voz->setDefaultVolume(0.8f); //Estableciendo volumen
 	vozSonando = SoundEngine->play2D(voz, false, true); //preparando sonido (inicializado en mute).
 
 	return true;
@@ -430,8 +447,9 @@ bool Update() {
 	// Utilizando Shader de iluminación.
 	 {
 		mLightsShader->use();
-		//metalPhongShader->use();
+		metalPhongShader->use();
 		puertaShader->use(); // Shader de puerta
+		cartelTransShader->use();
 
 		// Activamos para objetos transparentes
 		glEnable(GL_BLEND);
@@ -453,8 +471,10 @@ bool Update() {
 		mLightsShader->setMat4("view", view);
 		puertaShader->setMat4("projection", projection);
 		puertaShader->setMat4("view", view);
-		//metalPhongShader->setMat4("projection", projection);
-		//metalPhongShader->setMat4("view", view);
+		metalPhongShader->setMat4("projection", projection);
+		metalPhongShader->setMat4("view", view);
+		cartelTransShader->setMat4("projection", projection);
+		cartelTransShader->setMat4("view", view);
 
 		// Aplicamos transformaciones del modelo
 		glm::mat4 model = glm::mat4(1.0f);
@@ -464,9 +484,7 @@ bool Update() {
 
 		mLightsShader->setMat4("model", model);
 		puertaShader->setMat4("model", model);
-
-		//model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));	// it's a bit too big for our scene, so scale it down
-		//metalPhongShader->setMat4("model", model);
+		metalPhongShader->setMat4("model", model);
 
 		// Configuramos propiedades de fuentes de luz
 		mLightsShader->setInt("numLights", (int)gLights.size());
@@ -493,7 +511,7 @@ bool Update() {
 		
 		puertaShader->setVec3("eye", camera.Position);
 
-		/*
+
 		// Configuramos propiedades de fuentes de luz
 		metalPhongShader->setInt("numLights", (int)gLights.size());
 		for (size_t i = 0; i < gLights.size(); ++i) {
@@ -505,8 +523,19 @@ bool Update() {
 			SetLightUniformFloat(metalPhongShader, "distance", i, gLights[i].distance);
 		}
 
-		metalPhongShader->setVec3("eye", camera.Position);*/
+		metalPhongShader->setVec3("eye", camera.Position);
 
+		cartelTransShader->setInt("numLights", (int)gLights.size());
+		for (size_t i = 0; i < gLights.size(); ++i) {
+			SetLightUniformVec3(cartelTransShader, "Position", i, gLights[i].Position);
+			SetLightUniformVec3(cartelTransShader, "Direction", i, gLights[i].Direction);
+			SetLightUniformVec4(cartelTransShader, "Color", i, gLights[i].Color);
+			SetLightUniformVec4(cartelTransShader, "Power", i, gLights[i].Power);
+			SetLightUniformInt(cartelTransShader, "alphaIndex", i, gLights[i].alphaIndex);
+			SetLightUniformFloat(cartelTransShader, "distance", i, gLights[i].distance);
+		}
+
+		cartelTransShader->setVec3("eye", camera.Position);
 
 		// Aplicamos propiedades materiales
 		mLightsShader->setVec4("MaterialAmbientColor", material01.ambient);
@@ -516,7 +545,6 @@ bool Update() {
 
 		hospital->Draw(*mLightsShader);
 		
-
 		// Aplicamos propiedades materiales
 		metalPhongShader->setVec4("MaterialAmbientColor", metal02.ambient);
 		metalPhongShader->setVec4("MaterialDiffuseColor", metal02.diffuse);
@@ -524,6 +552,11 @@ bool Update() {
 		metalPhongShader->setFloat("transparency", metal02.transparency);
 
 		escritorio->Draw(*metalPhongShader);
+
+		mLightsShader->setFloat("transparency", carteles03.transparency);
+		CartelesAccion->Draw(*mLightsShader);
+
+		cartelTransShader->setFloat("transparency", 0.92f);
 
 		puertaShader->setVec4("MaterialAmbientColor", material01.ambient);
 		puertaShader->setVec4("MaterialDiffuseColor", material01.diffuse);
@@ -545,6 +578,14 @@ bool Update() {
 		puertaShader->setMat4("model", model); // mandando la matriz de modelo
 
 		 puerta->Draw(*puertaShader); // dibujado de la puerta 
+
+		 // Aplicando iluminación a cartel de traslacion y escalamiento:
+		 model = glm::mat4(1.0f);
+		 model = glm::translate(model, glm::vec3(-13.0f, 1.6f, -7.0f));
+		 model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		 //model = glm::scale(model, glm::vec3(1.0f, 3.5f, 2.5f));
+		 cartelTransShader->setMat4("model", model);
+		 CartelTrans->Draw(*mLightsShader);
 	}
 
 	glUseProgram(0);
@@ -657,7 +698,6 @@ bool Update() {
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		staticShader->setMat4("model", model);
 
-		CartelEntrada->Draw(*staticShader);
 		CartelesInfo->Draw(*staticShader);
 
 		model = glm::mat4(1.0f);
@@ -671,65 +711,6 @@ bool Update() {
 
 	glUseProgram(0);
 
-	
-	// Aplicamos Phong con acabado metálico.
-	/*
-	{
-		puertaShader->use(); // Shader de puerta
-
-		// Activamos para objetos transparentes
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glm::mat4 projection;
-		glm::mat4 view;
-
-		if (activeCamera) {
-			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
-			view = camera.GetViewMatrix();
-		}
-		else {
-			projection = glm::perspective(glm::radians(camera3rd.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
-			view = camera3rd.GetViewMatrix();
-		}
-
-		metalPhongShader->setMat4("projection", projection);
-		metalPhongShader->setMat4("view", view);
-
-		// Aplicamos transformaciones del modelo
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));	// it's a bit too big for our scene, so scale it down
-
-		//model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));	// it's a bit too big for our scene, so scale it down
-		metalPhongShader->setMat4("model", model);
-
-
-		// Configuramos propiedades de fuentes de luz
-		metalPhongShader->setInt("numLights", (int)gLights.size());
-		for (size_t i = 0; i < gLights.size(); ++i) {
-			SetLightUniformVec3(metalPhongShader, "Position", i, gLights[i].Position);
-			SetLightUniformVec3(metalPhongShader, "Direction", i, gLights[i].Direction);
-			SetLightUniformVec4(metalPhongShader, "Color", i, gLights[i].Color);
-			SetLightUniformVec4(metalPhongShader, "Power", i, gLights[i].Power);
-			SetLightUniformInt(metalPhongShader, "alphaIndex", i, gLights[i].alphaIndex);
-			SetLightUniformFloat(metalPhongShader, "distance", i, gLights[i].distance);
-		}
-
-		metalPhongShader->setVec3("eye", camera.Position);
-
-		// Aplicamos propiedades materiales
-		metalPhongShader->setVec4("MaterialAmbientColor", metal02.ambient);
-		metalPhongShader->setVec4("MaterialDiffuseColor", metal02.diffuse);
-		metalPhongShader->setVec4("MaterialSpecularColor", metal02.specular);
-		metalPhongShader->setFloat("transparency", metal02.transparency);
-
-		escritorio->Draw(*metalPhongShader);
-	}
-
-	glUseProgram(0);
-	*/
 	// Dibujamos vidrio
 	{
 		// Activamos el shader de fresnel
@@ -862,6 +843,7 @@ bool Update() {
 		// Aplicamos transformaciones del modelo
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, position); // translate it down so it's at the center of the scene
+		model = glm::translate(model, glm::vec3(0.0, 0.1f, 0.0f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(rotateCharacter), glm::vec3(0.0, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.008f, 0.008f, 0.008f));	// it's a bit too big for our scene, so scale it down
 
@@ -934,13 +916,13 @@ void processInput(GLFWwindow* window)
 	*/
 	// Rotación de la puerta de madera
 	if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
-		if (puerta_rotation < 130.0f) {
-			puerta_rotation += 1.f;
+		if (puerta_rotation < 125.0f) {
+			puerta_rotation += 1.0f;
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
 		if (puerta_rotation > 0.0f) {
-			puerta_rotation -= 1.f;
+			puerta_rotation -= 1.0f;
 		}
 	}
 
