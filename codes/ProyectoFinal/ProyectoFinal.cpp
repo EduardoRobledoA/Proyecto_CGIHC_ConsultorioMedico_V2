@@ -962,10 +962,11 @@ void processInput(GLFWwindow* window)
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+	/*
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(UP, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(DOWN, deltaTime);
+		camera.ProcessKeyboard(DOWN, deltaTime);*/
 
 	// ------------------------- Modo de visualizar poligonos (vértices, mayas y texturas) -----------------
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
@@ -977,15 +978,6 @@ void processInput(GLFWwindow* window)
 
 	// -------------------------- Transformaciones básicas (puertas) ----------------------------
 	/*Desplazamiento sobre un eje
-	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
-		if(door_offset < 0.836f)
-			door_offset += 0.01f;			//offset de puerta
-	} 
-		
-	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) {
-		if (door_offset > -0.836f)
-			door_offset -= 0.01f;
-	}
 	*/
 	// Rotación de la puerta de madera
 	if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
@@ -1121,6 +1113,7 @@ void processInput(GLFWwindow* window)
 
 	// ----------------------------------- Auxiliar para ubicación en OpenGL ---------------------------------------
 	//Cada que se presione, muestra la posición de la cámara libre/cámara del doctor
+	/*
 	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
 		if (activeCamera) {
 			printf("\nPosicion de la camara:\nX: %f\nY: %f\nZ: %f\n\n", camera.Position.x, camera.Position.y, camera.Position.z);
@@ -1144,6 +1137,7 @@ void processInput(GLFWwindow* window)
 		lPosition.z -= 0.1f;
 	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
 		lPosition.z += 0.1f;
+		*/
 }
 
 // glfw: Actualizamos el puerto de vista si hay cambios del tamaño
