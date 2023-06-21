@@ -131,6 +131,7 @@ Sugerencia: Material <tipoDeMaterial>
 Material material01;
 Material metal02;
 Material carteles03;
+Material gold04;
 
 // Creación de luces con Light gLight;
 std::vector<Light> gLights;
@@ -223,7 +224,7 @@ bool Start() {
 	doctorParadoShader = new Shader("shaders/10_vertex_skinning-IT.vs", "shaders/10_fragment_skinning-IT.fs");
 	cubemapShader = new Shader("shaders/10_vertex_cubemap.vs", "shaders/10_fragment_cubemap.fs");
 	mLightsShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
-	staticShader = new Shader("shaders/10_vertex_simple.vs", "shaders/10_fragment_simple.fs");
+	staticShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	fresnelShader = new Shader("shaders/11_Fresnel.vs", "shaders/11_Fresnel.fs");
 	puertaShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	metalPhongShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
@@ -339,6 +340,11 @@ bool Start() {
 	
 	// Acabado Carteles transparentes
 	carteles03.transparency = 0.92f;
+
+	// Acabado metálico (dorado)
+	gold04.ambient = glm::vec4(0.24725f, 0.1995f, 0.0754f, 1.0f);
+	gold04.diffuse = glm::vec4(0.75164f, 0.60648f, 0.22648f, 1.0f);
+	gold04.specular = glm::vec4(0.628281f, 0.555802f, 0.366065f, 1.0f);
 
 	// --------------------------------------------------Efectos de sonido (sólo inicializaciones) -----------------------------------------
 
@@ -625,6 +631,25 @@ bool Update() {
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
 
+		// Configuramos propiedades de fuentes de luz
+		staticShader->setInt("numLights", (int)gLights.size());
+		for (size_t i = 0; i < gLights.size(); ++i) {
+			SetLightUniformVec3(staticShader, "Position", i, gLights[i].Position);
+			SetLightUniformVec3(staticShader, "Direction", i, gLights[i].Direction);
+			SetLightUniformVec4(staticShader, "Color", i, gLights[i].Color);
+			SetLightUniformVec4(staticShader, "Power", i, gLights[i].Power);
+			SetLightUniformInt(staticShader, "alphaIndex", i, gLights[i].alphaIndex);
+			SetLightUniformFloat(staticShader, "distance", i, gLights[i].distance);
+		}
+
+		staticShader->setVec3("eye", camera.Position);
+
+		// Aplicamos propiedades materiales
+		staticShader->setVec4("MaterialAmbientColor", material01.ambient);
+		staticShader->setVec4("MaterialDiffuseColor", material01.diffuse);
+		staticShader->setVec4("MaterialSpecularColor", material01.specular);
+		staticShader->setFloat("transparency", material01.transparency);
+
 		floorObject->Draw(*staticShader);
 		/*
 		model = glm::mat4(1.0f);
@@ -644,14 +669,18 @@ bool Update() {
 		staticShader->setMat4("model", model);
 
 		DigestiveSystem->Draw(*staticShader);
-
+		/*
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-12.5f, 1.25f, 0.5f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.25f));
 		staticShader->setMat4("model", model);
 
-		MetalBase->Draw(*staticShader);
+		staticShader->setVec4("MaterialAmbientColor", metal02.ambient);
+		staticShader->setVec4("MaterialDiffuseColor", metal02.diffuse);
+		staticShader->setVec4("MaterialSpecularColor", metal02.specular);
+
+		MetalBase->Draw(*staticShader);*/
 		
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-12.5f, 5.0f+torrance_position, -5.5f));
@@ -660,14 +689,14 @@ bool Update() {
 		staticShader->setMat4("model", model);
 
 		Red->Draw(*staticShader);
-
+		/*
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-12.5f, 0.7f, -7.0f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(1.0f, 3.5f, 2.5f));
 		staticShader->setMat4("model", model);
 
-		MetalCube->Draw(*staticShader);
+		MetalCube->Draw(*staticShader);*/
 
 		
 		model = glm::mat4(1.0f);
@@ -685,7 +714,7 @@ bool Update() {
 		staticShader->setMat4("model", model);
 
 		Sugar->Draw(*staticShader);
-		
+		/*
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-12.5f, 3.8f, -9.5f));
 		model = glm::rotate(model, glm::radians(-180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -693,7 +722,7 @@ bool Update() {
 		model = glm::scale(model, glm::vec3(0.1f+ models_scale, 0.1f+ models_scale, 0.05f+ models_scale));
 		staticShader->setMat4("model", model);
 
-		InsulinKey->Draw(*staticShader);
+		InsulinKey->Draw(*staticShader);*/
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
@@ -710,6 +739,41 @@ bool Update() {
 		staticShader->setMat4("model", model);
 
 		puertaCristal->Draw(*staticShader);
+
+		// Dibujando los objetos que tienen material de tipo metal silver
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 1.25f, 0.5f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.25f));
+		staticShader->setMat4("model", model);
+
+		staticShader->setVec4("MaterialAmbientColor", metal02.ambient);
+		staticShader->setVec4("MaterialDiffuseColor", metal02.diffuse);
+		staticShader->setVec4("MaterialSpecularColor", metal02.specular);
+
+		MetalBase->Draw(*staticShader);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 0.7f, -7.0f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 3.5f, 2.5f));
+		staticShader->setMat4("model", model);
+
+		MetalCube->Draw(*staticShader);
+
+		// Dibujando los objetos que tienen material de tipo oro
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 3.8f, -9.5f));
+		model = glm::rotate(model, glm::radians(-180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f + models_scale, 0.1f + models_scale, 0.05f + models_scale));
+		staticShader->setMat4("model", model);
+
+		staticShader->setVec4("MaterialAmbientColor", gold04.ambient);
+		staticShader->setVec4("MaterialDiffuseColor", gold04.diffuse);
+		staticShader->setVec4("MaterialSpecularColor", gold04.specular);
+
+		InsulinKey->Draw(*staticShader);
 	}
 
 	glUseProgram(0);
