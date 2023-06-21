@@ -72,6 +72,7 @@ glm::vec3 forwardView(0.0f, 0.0f, 1.0f);
 float     scaleV = 0.005f;
 float     rotateCharacter = 0.0f; // variables de los personajes
 bool	  isWalking = false;
+bool	  isOpening = false;
 //float	  door_offset = 0.0f; // variables de las puertas
 float	  puerta_rotation = 0.0f;
 float	  organos_rotation = 0.0f; // variables de los órganos
@@ -160,9 +161,11 @@ ISoundEngine *SoundEngine = createIrrKlangDevice();//Creación del motor de soni
 
 ISoundSource *voz = SoundEngine->addSoundSourceFromFile("sound/Dialogo2.mp3"); //
 ISoundSource *sonidoIntroduccion = SoundEngine->addSoundSourceFromFile("sound/Introduccion.mp3"); //
+ISoundSource* sonidoPuerta = SoundEngine->addSoundSourceFromFile("sound/puertacut.mp3"); //
 
 ISound	*vozSonando;
 ISound	*introduccionSonando;
+ISound  *puertaSonando;
 
 // selección de cámara
 bool    activeCamera = 1; // 1 = Cámara modo libre, 0 = Cámara vista desde el doctor
@@ -353,6 +356,9 @@ bool Start() {
 
 	voz->setDefaultVolume(0.8f); //Estableciendo volumen
 	vozSonando = SoundEngine->play2D(voz, false, true); //preparando sonido (inicializado en mute).
+
+	sonidoPuerta->setDefaultVolume(0.5f); //Estableciendo volumen
+	//puertaSonando = SoundEngine->play2D(sonidoPuerta, false, true); //preparando sonido (inicializado en mute).
 
 	return true;
 }
@@ -984,13 +990,26 @@ void processInput(GLFWwindow* window)
 	// Rotación de la puerta de madera
 	if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
 		if (puerta_rotation < 125.0f) {
-			puerta_rotation += 1.0f;
+			if (!isOpening) {
+				isOpening = true;
+				puertaSonando = SoundEngine->play2D(sonidoPuerta);
+			}
+			puerta_rotation += 1.2f;
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
+		
 		if (puerta_rotation > 0.0f) {
-			puerta_rotation -= 1.0f;
+			if (!isOpening){
+				isOpening = true;
+				puertaSonando = SoundEngine->play2D(sonidoPuerta);
+			}
+			puerta_rotation -= 1.2f;
 		}
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_H) != GLFW_PRESS && glfwGetKey(window, GLFW_KEY_J) != GLFW_PRESS) {
+		isOpening = false;
 	}
 
 	// Rotación de los organos
