@@ -98,6 +98,7 @@ Model	*hospital;
 Model   *puerta;
 Model	*puertaCristal;
 Model   *escritorio;
+Model   *sillones;
 Model   *floorObject;
 //Model	*Pancreas;
 Model	*DigestiveSystem;
@@ -239,10 +240,11 @@ bool Start() {
 	// ----------------------------------------------------Importación de modelos -----------------------------------------------------------------
 	// Para organización, crear el objeto y llamarlo por lo que es. Ejemplo:
 	// consultorio = new Model("models/ProyectoFinal/<nombre_del_archivo>.fbx")
-	hospital = new Model("models/FachadaConsultorioTest6.fbx"); // Cargar aquí el modelo del consultorio
+	hospital = new Model("models/FachadaConsultorio.fbx"); // Cargar aquí el modelo del consultorio
 	puerta = new Model("models/Puerta.fbx"); //Modelo de la puerta
 	puertaCristal = new Model("models/glassDoors.fbx"); 
 	escritorio = new Model("models/Escritorio.fbx");
+	sillones = new Model("models/sillones.fbx");
 	CartelesAccion = new Model("models/CartelesAccion.fbx");
 	CartelesInfo = new Model("models/CartelesInfo.fbx");
 	CartelTrans = new Model("models/CartelTrans.fbx");
@@ -544,6 +546,7 @@ bool Update() {
 		mLightsShader->setFloat("transparency", material01.transparency);
 
 		hospital->Draw(*mLightsShader);
+		sillones->Draw(*mLightsShader);
 		
 		// Aplicamos propiedades materiales
 		metalPhongShader->setVec4("MaterialAmbientColor", metal02.ambient);
